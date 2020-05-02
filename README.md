@@ -73,20 +73,20 @@ Entering anything else (like lowercase `hello`) in `B:1` will enter `B:2`.
 In `B:2`, the dongle will dump every Schellenberg message it receives to its serial output.
 Line endings are denoted by `\r`.
 
-
 #### B:2 Schellenberg Message Format
 Pushing the middle button of a Schellenberg Remote causes `ss118F365400029820CB` to appear on the serial monitor.
 
 This is the structure of the message:
 
-|          | Meaning                | Notes                                                                    |
-|----------|------------------------|--------------------------------------------------------------------------|
-| ss       | Schellenberg Prefix?   | Fixed it seems                                                           |
-| 118F3654 | 4 Byte Device ID       | Probably Unique per remote                                               |
-| 00       | Command                |                                                                          |
-| 0298     | 2 Byte Counter         | Incremented on each new cmd. Proably to prevent replay attacks           |
-| 20       | 1 Byte local counter   | Each message is sent 10 times by the remote. [0,2,4,8,12,16,20,24,28,32] |
-| CB       | 1 Byte signal strength |                                                                          |
+|          | Meaning                | Notes                                                                                                                             |
+|----------|------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| ss       | Schellenberg Prefix?   | Fixed it seems                                                                                                                    |
+| 11       | Device Enumerater      | The Selected Device on the Remote (01 for all, 11-51 for Device 1 to 5). The Gateway uses A1-F1 (I think have only seend A and B) | 
+| 8F3654   | Device ID              | Unique per remote / Stick / Gateway                                                                                               |
+| 00       | Command                |                                                                                                                                   |
+| 0298     | 2 Byte Counter         | Incremented on each new cmd. Proably to prevent replay attacks                                                                    |
+| 20       | 1 Byte local counter   | Each message is sent 10 times by the remote. [0,2,4,8,12,16,20,24,28,32]                                                          |
+| CB       | 1 Byte signal strength |                                                                                                                                   |
 
 The following commands are currently known:
 
@@ -101,6 +101,22 @@ The following commands are currently known:
 | 0x40 | 0b1000000 | Manual Stop        | lol                           |
 | 0x41 | 0b1000001 | Manual Up          | As long as the button is held |
 | 0x42 | 0b1000010 | Manual Down        | As long as the button is held |
+
+#### B:1 Sending Schellenberg Messages
+
+To send a message to a device you have to go into `B:1` mode using `!G` and tell it what you want.
+You start of with the `ss` Prefix. After that comes the Device Enumerater (see table above) for example `A5` which is followed by the command that one is sending.
+At the End there need to be four zeros `0000` which at the moment are of unrecognized purposes.
+
+So sending a command for exmaple would look something like:
+```
+!G
+ssA59010000
+```
+
+So we are sending "Change Device with Enumerater A5 to drive up".
+The Dongle will answer with `t0` followed by `t1`. The Software on the SmartFriends-Box titles these ACKs, but they only seem to be an acknowledgement of sending.
+After the process the Dongle will fall back into listening mode `B:2`
 
 ### Misc
 The button on the Dongle doesn't seem to do anything?
