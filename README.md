@@ -81,7 +81,7 @@ This is the structure of the message:
 |          | Meaning                | Notes                                                                                                                             |
 |----------|------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | ss       | Schellenberg Prefix?   | Fixed it seems                                                                                                                    |
-| 11       | Device Enumerater      | The Selected Device on the Remote (01 for all, 11-51 for Device 1 to 5). The Gateway uses A1-F1 (I think have only seend A and B) | 
+| 11       | Device Enumerater      | The Selected Device on the Remote (01 for all, 11-51 for Device 1 to 5). The Gateway uses A1-F1 (Maybe?! Have only seen A and B) | 
 | 8F3654   | Device ID              | Unique per remote / Stick / Gateway                                                                                               |
 | 00       | Command                |                                                                                                                                   |
 | 0298     | 2 Byte Counter         | Incremented on each new cmd. Proably to prevent replay attacks                                                                    |
