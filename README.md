@@ -41,7 +41,7 @@ The SerialNumber seems to always be `000000000000`
 Other than that, it seems to respond to a lot of different baudrates. Apparently it's clever enough to auto-negotiate or something like that?
 
 
-### Communication
+## Communication
 It appears that the device might be a general-purpose solution with a vendor-specific customizing that contains all the relevant business logic.
 
 The device can enter at least three different modes where different command subsets are available:
@@ -73,7 +73,7 @@ Entering anything else (like lowercase `hello`) in `B:1` will enter `B:2`.
 In `B:2`, the dongle will dump every Schellenberg message it receives to its serial output.
 Line endings are denoted by `\r`.
 
-#### B:2 Schellenberg Message Format
+### B:2 Schellenberg Message Format
 Pushing the middle button of a Schellenberg Remote causes `ss118F365400029820CB` to appear on the serial monitor.
 
 This is the structure of the message:
@@ -90,33 +90,52 @@ This is the structure of the message:
 
 The following commands are currently known:
 
-| Hex  | Binary    | Meaning            | Notes                         |
-|------|-----------|--------------------|-------------------------------|
-| 0x00 | 0b0000000 | Stop               |                               |
-| 0x01 | 0b0000001 | Up                 |                               |
-| 0x02 | 0b0000010 | Down               |                               |
-| 0x60 | 0b1100000 | Pair?              |                               |
-| 0x61 | 0b1100001 | Set upper endpoint |                               |
-| 0x62 | 0b1100010 | Set lower endpoint |                               |
-| 0x40 | 0b1000000 | Manual Stop        | lol                           |
-| 0x41 | 0b1000001 | Manual Up          | As long as the button is held |
-| 0x42 | 0b1000010 | Manual Down        | As long as the button is held |
+| Hex  | Binary    | Meaning            | Notes                                        |
+|------|-----------|--------------------|----------------------------------------------|
+| 0x00 | 0b0000000 | Stop               |                                              |
+| 0x01 | 0b0000001 | Up                 |                                              |
+| 0x02 | 0b0000010 | Down               |                                              |
+| 0x40 | 0b1000000 | Pair?              | Used to make Device listen and a Remotes ID. |
+| 0x60 | 0b1100000 | Pair?              |                                              |
+| 0x61 | 0b1100001 | Set upper endpoint |                                              |
+| 0x62 | 0b1100010 | Set lower endpoint |                                              |
+| 0x40 | 0b1000000 | Manual Stop        | lol                                          |
+| 0x41 | 0b1000001 | Manual Up          | As long as the button is held                |
+| 0x42 | 0b1000010 | Manual Down        | As long as the button is held                |
 
-#### B:1 Sending Schellenberg Messages
+### Sending Schellenberg Messages
 
-To send a message to a device you have to go into `B:1` mode using `!G` and tell it what you want.
-You start of with the `ss` Prefix. After that comes the Device Enumerater (see table above) for example `A5` which is followed by the command that one is sending.
+You start of with the `ss` Prefix. After that comes the Device Enumerater (see table above) for example `A5` which is followed by a 9 (which is not identified right now) and finally the command that one is sending.
 At the End there need to be four zeros `0000` which at the moment are of unrecognized purposes.
 
 So sending a command for exmaple would look something like:
 ```
-!G
 ssA59010000
 ```
-
 So we are sending "Change Device with Enumerater A5 to drive up".
 The Dongle will answer with `t0` followed by `t1`. The Software on the SmartFriends-Box titles these ACKs, but they only seem to be an acknowledgement of sending.
 After the process the Dongle will fall back into listening mode `B:2`
 
+#### Pairing a Device with the Dongle
+
+Since every Dongle, Remote and Gateway seems to have a unique identifer which can't be changed. The Device we are trying to control needs to know our unique ID and know where our Rolling Code is starting (Which only seems to be for signing purposes not for encryption, because every other device can reed the Rolling Code in clear text.
+
+The pair process is as follows:
+
+1. Select the Device you want to pair on an already paired Remote.
+2. Put the already paired Remote into Programming Mode by pressing the Button in the battery compartment (The LED of the selected Device on the Remote should no be blinking.
+3. Press the middle `Stop` button on the blinking Remote. (When pairing a Shutter it should beep and rattle a bit)
+4. Send a command which consist of a device number on the Remote ( for example `C1`) and the pair command (again when pairing a Shutter it should beeo and rattle a bit)
+5. Finished. You can now send commands to the device.
+
+##### Exmaple pairing procedure:
+Pair Mode on Remote -> Stop Button on Remote -> Send Command `ssC19400000`-> Finished
+
+You can now Control the device with
+```
+ssC19000000
+ssC19010000
+ssC19020000
+```
 ### Misc
 The button on the Dongle doesn't seem to do anything?
