@@ -12,7 +12,9 @@ Sadly though, the QIVICON Smarthome system is a closed-source source solution re
 This repository documents how to interface with said USB Dongle so that Schellenberg devices can be used via proper FOSS Smarthome software.
 
 
-Currently, this is WIP. Help is greatly appreciated.
+If you successfully controlled a device using this information, feel free to open a PR to update the supported devices list.
+
+Same goes for any projects that might use this.
 
 ## The Device
 
