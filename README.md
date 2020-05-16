@@ -73,7 +73,7 @@ Here's a list of all currently known commands:
 Entering anything else (like lowercase `hello`) in **Initial Mode** will enter **Listening Mode**.
 
 In **Listening Mode**, the dongle will dump every Schellenberg message it receives to its serial output.
-Line endings are denoted by `\r`.
+Line endings are denoted by `\r\n`.
 
 ### Communicating with Schellenberg Devices
 It is possible to both listen to Schellenberg Communication around you as well as send your own commands to paired devices.
