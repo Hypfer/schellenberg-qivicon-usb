@@ -148,11 +148,11 @@ This is the structure of a command message:
 | ---- | -------------------- | -------------------------------------------------------------------- |
 | ss   | Schellenberg Prefix? | Fixed                                                                |
 | A5   | Device Enumerator    | The ID used by the controlling device to identify the paired device. |
-| 9    | ?                    | A lonesome nine with no known purpose. Required                      |
+| 9    | Numbers of Messages  | Send 9 Messages after each other. Can be 0-F                         |
 | 01   | Command              |                                                                      |
 | 0000 | Padding              | Has to be 0000. Required.                                            |
 
-The purpose of both the `9` as well as the trailing `0000` is yet to be found
+The command can take the Padding as well and overwrites the 2 Byte Message Counter.
 
 Putting everything together, an example command may look like this:
 
