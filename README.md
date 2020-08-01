@@ -69,9 +69,12 @@ Here's a list of all currently known commands:
 | !F        | Si446x                       |                        | The transceiver module?        |
 | !R        | OK                           | Reboots the device     | Only available in B:0          |
 | !L        | L:2                          | ??                     | Only available in B:0          |
+| !E1       | OK                           | Local Echo On          | Blink x times, wait and repeat |
+| !E0       | OK                           | Local Echo Off         | Blink x times, wait and repeat |
 | !\*       | EE                           | Error                  | \* = Wildcard                  |
 | so+       | OK                           | LED On                 |                                |
 | so-       | OK                           | LED Off                |                                |
+| so1 - so9 | OK                           | LED Blink              | Blink x times, wait and repeat |
 | so1 - so9 | OK                           | LED Blink              | Blink x times, wait and repeat |
 
 Entering anything else (like lowercase `hello`) in **Initial Mode** will enter **Listening Mode**.
@@ -159,7 +162,7 @@ ssA59010000
 
 Which translates to "Change Device with Enumerater A5 to drive up".
 
-The Dongle will answer with `t0` followed by `t1`. The Software on the SmartFriends-Box titles these ACKs, but they only seem to be an acknowledgement of sending.
+The Dongle will answer with `t1` followed by `t0`, coresponding to "Transmitter ON" and "Transmitter OFF". The Software on the SmartFriends-Box titles these ACKs, but they only seem to be an acknowledgement of sending.
 After the process the Dongle will fall back into listening mode `B:2`
 
 Any command sent between `t0` and `t1` will be rejected with a `tE`.
