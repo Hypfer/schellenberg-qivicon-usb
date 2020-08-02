@@ -61,21 +61,26 @@ All known commands are prefixed with a `!` and seem to be uppercase-only.
 
 Here's a list of all currently known commands:
 
-| CMD       | Example output               | Meaning                | Notes                          |
-| --------- | ---------------------------- | ---------------------- | ------------------------------ |
-| !?        | RFTU_V20 F:20180510_DFBD B:1 | Version + current Mode |                                |
-| !B        | OK                           | Enter B:0              |                                |
-| !G        | OK                           | Enter B:1              |                                |
-| !F        | Si446x                       |                        | The transceiver module?        |
-| !R        | OK                           | Reboots the device     | Only available in B:0          |
-| !L        | L:2                          | ??                     | Only available in B:0          |
-| !E1       | OK                           | Local Echo On          | Blink x times, wait and repeat |
-| !E0       | OK                           | Local Echo Off         | Blink x times, wait and repeat |
-| !\*       | EE                           | Error                  | \* = Wildcard                  |
-| so+       | OK                           | LED On                 |                                |
-| so-       | OK                           | LED Off                |                                |
-| so1 - so9 | OK                           | LED Blink              | Blink x times, wait and repeat |
-| so1 - so9 | OK                           | LED Blink              | Blink x times, wait and repeat |
+| CMD       | Example output                     | Meaning                | Notes                            |
+| --------- | ---------------------------------- | ---------------------- | -------------------------------- |
+| !?        | RFTU_V20 F:20180510_DFBD B:1       | Version + current Mode |                                  |
+| !B        | OK                                 | Enter B:0              |                                  |
+| !G        | OK                                 | Enter B:1              |                                  |
+| !F        | Si446x                             |                        | The transceiver module?          |
+| !R        | OK                                 | Reboots the device     | Only available in B:0            |
+| !L        | L:2                                | ??                     | Only available in B:0            |
+| !E1       | OK                                 | Local Echo On          | Blink x times, wait and repeat   |
+| !E0       | OK                                 | Local Echo Off         | Blink x times, wait and repeat   |
+| !\*       | EE                                 | Error                  | \* = Wildcard                    |
+| sg        | 40 44 49 49 4B 4F 50 4E            | ??                     |                                  |
+| so+       | OK                                 | LED On                 |                                  |
+| so-       | OK                                 | LED Off                |                                  |
+| so1 - so9 | OK                                 | LED Blink              | Blink x times, wait and repeat   |
+| sp        | sp00080015000000030000000F00000000 | ??                     |                                  |
+| sq        | sq0000FFFF001EFFFFFFFF0000FFFF0000 | ??                     |                                  |
+| sr        | sr5D3E7C                           | Device ID              | Device ID See Recieving Messages |
+| sv        | sv00000000000000000000000000000000 | ??                     |                                  |
+| sw        | sw0000FFFF0000FFFFFFFF0000FFFF0000 | ??                     |                                  |
 
 Entering anything else (like lowercase `hello`) in **Initial Mode** will enter **Listening Mode**.
 
@@ -120,21 +125,24 @@ The device enumerator can be anything from `0x01` to `0xFF`.
 Schellenberg Remotes are using `0x01` to communicate to _all_ paired devices and - in case of the 5ch remote - `[0x11,0x21,0x31,0x41,0x51]` to address a specific one.
 The USB Dongle however can use every possible value which leaves us with 255 controllable devices.
 
-#### Commands
+#### Commands / Sensor Stats
 
 The following commands are currently known:
 
-| Hex  | Binary    | Meaning            | Notes                                               |
-| ---- | --------- | ------------------ | --------------------------------------------------- |
-| 0x00 | 0b0000000 | Stop               |                                                     |
-| 0x01 | 0b0000001 | Up                 |                                                     |
-| 0x02 | 0b0000010 | Down               |                                                     |
-| 0x40 | 0b1000000 | Pair?              | Make the selected device listen to a new Remotes ID |
-| 0x41 | 0b1000001 | Manual Up          | As long as the button is held                       |
-| 0x42 | 0b1000010 | Manual Down        | As long as the button is held                       |
-| 0x60 | 0b1100000 | Pair?              |                                                     |
-| 0x61 | 0b1100001 | Set upper endpoint |                                                     |
-| 0x62 | 0b1100010 | Set lower endpoint |                                                     |
+| Hex  | Binary    | Meaning                     | Notes                                                               |
+| ---- | --------- | --------------------------- | ------------------------------------------------------------------- |
+| 0x00 | 0b0000000 | Stop                        |                                                                     |
+| 0x01 | 0b0000001 | Up                          |                                                                     |
+| 0x02 | 0b0000010 | Down                        |                                                                     |
+| 0x1A | 0b0011010 | Window Handle Position 0°   | Sensor status with Device Enumerator 0x14                           |
+| 0x1B | 0b0011011 | Window Handle Position 90°  | Sensor status with Device Enumerator 0x14                           |
+| 0x3B | 0b0111011 | Window Handle Position 180° | Sensor status with Device Enumerator 0x14                           |
+| 0x40 | 0b1000000 | Allow Pairing               | Make the selected device listen to a new Remotes ID                 |
+| 0x41 | 0b1000001 | Manual Up                   | As long as the button is held                                       |
+| 0x42 | 0b1000010 | Manual Down                 | As long as the button is held                                       |
+| 0x60 | 0b1100000 | Pair / Change Direction     | Pair with my Device ID / Change your Rotation Direction for UP/DOWN |
+| 0x61 | 0b1100001 | Set upper endpoint          |                                                                     |
+| 0x62 | 0b1100010 | Set lower endpoint          |                                                                     |
 
 #### Sending Schellenberg Messages
 
@@ -150,9 +158,9 @@ This is the structure of a command message:
 | A5   | Device Enumerator    | The ID used by the controlling device to identify the paired device. |
 | 9    | Numbers of Messages  | Send 9 Messages after each other. Can be 0-F                         |
 | 01   | Command              |                                                                      |
-| 0000 | Padding              | Has to be 0000. Required.                                            |
+| 0000 | Padding              | Required.                                                            |
 
-The command can take the Padding as well and overwrites the 2 Byte Message Counter.
+The command can take the Padding as well, which overwrites the 2 Byte Message Counter.
 
 Putting everything together, an example command may look like this:
 
