@@ -213,6 +213,7 @@ These Devices have been successfully be controlled by using the information foun
 | EAN           | Art. Nr. | Name                         | Notes                                                  |
 | ------------- | -------- | ---------------------------- | ------------------------------------------------------ |
 | 4003971202646 | 20264    | Funk-Markisenantrieb Premium | Doesn't support fixed positions between Open and Close |
+| 4003971225768 | 22576    | RolloDrive 75 Premium        | Unkown if positions are supported                      |
 
 ### Misc
 
