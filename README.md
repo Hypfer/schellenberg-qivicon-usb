@@ -188,12 +188,13 @@ The pairing process works like this:
 1. Select the Device you want to pair on an already paired Remote.
 2. Put the already paired Remote into Programming Mode by pressing the Button in the battery compartment (The LED of the selected Device on the Remote should now be blinking)
 3. Press the middle `Stop` button on the blinking Remote. (When pairing a Shutter it should beep and rattle a bit)
-4. Send a command which consist of a device number on the Remote ( for example `C1`) and the pair command (again when pairing a Shutter it should beep and rattle a bit)
-5. Finished. You can now send commands to the device.
+4. Send a command which consist of a device enumerator on the Stick ( for example `C1`) and the pair command (0x60).
+5. Directly send a 0x40 to the same device enumerator to finish the pair (again when pairing a Shutter it should beep and rattle a bit)
+6. Finished. You can now send commands to the device.
 
 ##### Example pairing procedure:
 
-Pair Mode on Remote -> Stop Button on Remote -> Send Command `ssC19400000`-> Finished
+Pair Mode on Remote -> Stop Button on Remote -> Send Command `ssC19600000`-> Send Command `ssC19400000`-> Finished
 
 You can now Control the device with
 
